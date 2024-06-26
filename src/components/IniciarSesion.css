@@ -1,15 +1,20 @@
+/* Estilos generales */
+
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #aea9a9;
+    background-color: #bfbbbb;
     margin: 0;
     padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 
 /* Contenedor del formulario */
 
 .form-container {
-    margin: auto;
     width: 100%;
     max-width: 400px;
     padding: 20px;
@@ -17,7 +22,6 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     box-sizing: border-box;
-    margin-top: 50px;
 }
 
 
