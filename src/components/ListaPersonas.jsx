@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import './ListaPersonas.css';
 
 export default class ListaPersonas extends Component {
   render() {

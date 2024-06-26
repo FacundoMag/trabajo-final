@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import './IniciarSesion.css';
 
 export default class IniciarSesion extends Component {
   state = {
@@ -24,13 +25,25 @@ export default class IniciarSesion extends Component {
 
   render() {
     return (
-      <div>
+      <div className="form-container">
         <form onSubmit={this.handleSubmit}>
-          <input type="text" name="user" placeholder="Usuario" onChange={this.handleChange} />
-          <input type="password" name="pass" placeholder="Contraseña" onChange={this.handleChange} />
-          <button type="submit">Iniciar Sesión</button>
+          <input 
+            type="text" 
+            name="user" 
+            placeholder="Usuario" 
+            onChange={this.handleChange} 
+            className="input-field"
+          />
+          <input 
+            type="password" 
+            name="pass" 
+            placeholder="Contraseña" 
+            onChange={this.handleChange} 
+            className="input-field"
+          />
+          <button type="submit" className="submit-button">Iniciar Sesión</button>
         </form>
-        <p>¿No tienes cuenta? <a href="#" onClick={this.props.cambiarVista}>Regístrate</a></p>
+        <p className="register-link">¿No tienes cuenta? <a href="#" onClick={this.props.cambiarVista}>Regístrate</a></p>
       </div>
     );
   }
