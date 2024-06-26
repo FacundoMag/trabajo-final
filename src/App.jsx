@@ -10,16 +10,18 @@ export default class App extends Component {
     token: null,
     user: null,
     vista: "iniciarSesion",
-    api: axios.create({
-      baseURL: 'https://personas.ctpoba.edu.ar/api',
-    }),
   };
 
+  // Función para manejar el inicio de sesión
   handleLogin = (token, user) => {
     this.setState({ token, user, vista: "gestionPersonas" });
-    this.state.api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    // Guardar el token en localStorage para persistencia
+    localStorage.setItem('token', token);
+    // Configurar el token en Axios globalmente
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   };
 
+  // Función para cambiar entre vista de inicio de sesión y registro
   cambiarVista = () => {
     const { vista } = this.state;
     if (vista === "iniciarSesion") {
@@ -29,8 +31,17 @@ export default class App extends Component {
     }
   };
 
+  // Verificar el token al cargar la aplicación
+  componentDidMount() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.setState({ token, vista: "gestionPersonas" });
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+  }
+
   render() {
-    const { vista, token, api } = this.state;
+    const { vista, token, user } = this.state;
 
     return (
       <div>
@@ -38,7 +49,7 @@ export default class App extends Component {
           <IniciarSesion onLogin={this.handleLogin} cambiarVista={this.cambiarVista} />
         )}
         {vista === "registro" && <Registro onRegister={this.cambiarVista} />}
-        {vista === "gestionPersonas" && <GestionPersonas api={api} token={token} />}
+        {vista === "gestionPersonas" && <GestionPersonas token={token} user={user} />}
       </div>
     );
   }
