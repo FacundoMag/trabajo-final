@@ -1,0 +1,42 @@
+.agregar-persona-form {
+    width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.agregar-persona-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.agregar-persona-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.agregar-persona-form input[type="text"],
+.agregar-persona-form input[type="date"],
+.agregar-persona-form input[type="email"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.agregar-persona-form button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.agregar-persona-form .error-message {
+    color: red;
+    margin-bottom: 10px;
+}

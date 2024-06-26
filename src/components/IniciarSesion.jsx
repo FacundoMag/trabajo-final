@@ -1,6 +1,7 @@
 // IniciarSesion.jsx
 import React, { Component } from "react";
 import axios from "axios";
+import './IniciarSesion.css';
 
 export default class IniciarSesion extends Component {
   state = {
@@ -38,7 +39,7 @@ export default class IniciarSesion extends Component {
           <br />
           <button type="submit">Iniciar Sesión</button>
         </form>
-        <p>¿No tienes cuenta? <a href="#" onClick={this.props.cambiarVista}>Regístrate</a></p>
+        <p className="register-link">¿No tienes cuenta? <a href="#" onClick={this.props.cambiarVista}>Regístrate</a></p>
       </div>
     );
   }

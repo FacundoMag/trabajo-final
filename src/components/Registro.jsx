@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import './Registro.css';
 
 export default class Registro extends Component {
   state = {

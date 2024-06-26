@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import ListaPersonas from "./ListaPersonas";
 import AgregarPersona from "./AgregarPersona";
+import './GestionarPersonas.css';
 
 export default class GestionPersonas extends Component {
   state = {

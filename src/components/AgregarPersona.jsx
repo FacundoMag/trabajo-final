@@ -1,5 +1,7 @@
 // AgregarPersona.jsx
 import React, { Component } from "react";
+import axios from "axios";
+import './Styles.css';
 
 export default class AgregarPersona extends Component {
   state = {

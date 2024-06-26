@@ -1,0 +1,19 @@
+.gestion-personas {
+    width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.gestion-personas h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.gestion-personas>div {
+    margin-bottom: 25px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
