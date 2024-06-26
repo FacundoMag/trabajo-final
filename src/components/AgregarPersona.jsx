@@ -1,92 +1,57 @@
+// AgregarPersona.jsx
 import React, { Component } from "react";
-import axios from "axios";
 
 export default class AgregarPersona extends Component {
   state = {
-    documento: "",
     nombres: "",
     apellidos: "",
+    documento: "",
     fechaNac: "",
     telefono: "",
     domicilio: "",
-    mail: "",
-    error: null,
+    mail: ""
   };
 
-  handleChange = (event) => {
+  handleChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const { nombres, apellidos, documento, fechaNac, telefono, domicilio, mail } = this.state;
+    const nuevaPersona = { nombres, apellidos, documento, fechaNac, telefono, domicilio, mail };
+
+    this.props.agregarPersona(nuevaPersona);
     this.setState({
-      [event.target.name]: event.target.value,
+      nombres: "",
+      apellidos: "",
+      documento: "",
+      fechaNac: "",
+      telefono: "",
+      domicilio: "",
+      mail: ""
     });
   };
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-
-    const { documento, nombres, apellidos, fechaNac, telefono, domicilio, mail } = this.state;
-    const { token, onPersonaAgregada } = this.props;
-
-    axios
-      .post(
-        "https://personas.ctpoba.edu.ar/api/personas",
-        { documento, nombres, apellidos, fechaNac, telefono, domicilio, mail },
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      .then((response) => {
-        const newPersona = response.data.persona || response.data;
-        onPersonaAgregada(newPersona);
-        this.setState({
-          documento: "",
-          nombres: "",
-          apellidos: "",
-          fechaNac: "",
-          telefono: "",
-          domicilio: "",
-          mail: "",
-          error: null,
-        });
-      })
-      .catch((error) => {
-        console.error("Error agregando persona:", error);
-        this.setState({ error: error.message });
-      });
-  };
-
   render() {
-    const { documento, nombres, apellidos, fechaNac, telefono, domicilio, mail, error } = this.state;
-
     return (
       <div>
         <h2>Agregar Persona</h2>
         <form onSubmit={this.handleSubmit}>
-          <div>
-            <label>Documento:</label>
-            <input type="text" name="documento" value={documento} onChange={this.handleChange} required />
-          </div>
-          <div>
-            <label>Nombres:</label>
-            <input type="text" name="nombres" value={nombres} onChange={this.handleChange} required />
-          </div>
-          <div>
-            <label>Apellidos:</label>
-            <input type="text" name="apellidos" value={apellidos} onChange={this.handleChange} required />
-          </div>
-          <div>
-            <label>Fecha de Nacimiento:</label>
-            <input type="date" name="fechaNac" value={fechaNac} onChange={this.handleChange} required />
-          </div>
-          <div>
-            <label>Teléfono:</label>
-            <input type="text" name="telefono" value={telefono} onChange={this.handleChange} />
-          </div>
-          <div>
-            <label>Domicilio:</label>
-            <input type="text" name="domicilio" value={domicilio} onChange={this.handleChange} />
-          </div>
-          <div>
-            <label>Mail:</label>
-            <input type="email" name="mail" value={mail} onChange={this.handleChange} />
-          </div>
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          <input type="text" name="nombres" placeholder="Nombres" onChange={this.handleChange} required />
+          <br />
+          <input type="text" name="apellidos" placeholder="Apellidos" onChange={this.handleChange} required />
+          <br />
+          <input type="text" name="documento" placeholder="Documento" onChange={this.handleChange} required />
+          <br />
+          <input type="date" name="fechaNac" placeholder="Fecha de Nacimiento" onChange={this.handleChange} />
+          <br />
+          <input type="text" name="telefono" placeholder="Teléfono" onChange={this.handleChange} />
+          <br />
+          <input type="text" name="domicilio" placeholder="Domicilio" onChange={this.handleChange} />
+          <br />
+          <input type="email" name="mail" placeholder="Email" onChange={this.handleChange} />
+          <br />
           <button type="submit">Agregar Persona</button>
         </form>
       </div>
