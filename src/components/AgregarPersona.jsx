@@ -28,7 +28,7 @@ export default class FormularioAgregarPersona extends Component {
         }
       });
       console.log(response.data);
-      this.props.agregarPersona(response.data.persona);
+      this.props.onAddPersona(response.data.persona); // Call the onAddPersona function passed as a prop
       this.setState({
         nombres: "",
         apellidos: "",
