@@ -1,83 +1,39 @@
-// src/components/Registro.jsx
-import React, { useState } from "react";
+import React, { Component } from "react";
+import axios from "axios";
 
-const Registro = ({ onRegister, onBack }) => {
-  const [newUser, setNewUser] = useState({
+export default class Registro extends Component {
+  state = {
     user: "",
     pass: "",
     nombres: "",
     apellidos: "",
-    documento: ""
-  });
-
-  const handleChange = (e) => {
-    setNewUser({ ...newUser, [e.target.name]: e.target.value });
+    documento: "",
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onRegister(newUser);
+  manejarCambio = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
   };
 
-  return (
-    <div>
-      <h2>Registro</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Usuario:</label>
-          <input
-            type="text"
-            name="user"
-            value={newUser.user}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Contraseña:</label>
-          <input
-            type="password"
-            name="pass"
-            value={newUser.pass}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Nombres:</label>
-          <input
-            type="text"
-            name="nombres"
-            value={newUser.nombres}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Apellidos:</label>
-          <input
-            type="text"
-            name="apellidos"
-            value={newUser.apellidos}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Documento:</label>
-          <input
-            type="text"
-            name="documento"
-            value={newUser.documento}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit">Registrar</button>
-      </form>
-      <button onClick={onBack}>Volver a Iniciar Sesión</button>
-    </div>
-  );
-};
+  manejarRegistro = async () => {
+    try {
+      const response = await axios.post("https://personas.ctpoba.edu.ar/api/registrar", this.state);
+      this.props.manejarLogin(response.data.user, response.data.token);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-export default Registro;
+  render() {
+    return (
+      <div>
+        <h2>Registro</h2>
+        <input name="user" placeholder="Usuario" onChange={this.manejarCambio} />
+        <input name="pass" placeholder="Contraseña" onChange={this.manejarCambio} type="password" />
+        <input name="nombres" placeholder="Nombres" onChange={this.manejarCambio} />
+        <input name="apellidos" placeholder="Apellidos" onChange={this.manejarCambio} />
+        <input name="documento" placeholder="Documento" onChange={this.manejarCambio} />
+        <button onClick={this.manejarRegistro}>Registrarse</button>
+      </div>
+    );
+  }
+}

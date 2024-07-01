@@ -1,80 +1,46 @@
-// src/App.jsx
-import React, { useState, useEffect } from "react";
+import React, { Component } from "react";
 import axios from "axios";
-import Login from "./components/Login";
 import Registro from "./components/Registro";
+import Login from "./components/Login";
 import GestionPersonas from "./components/GestionPersonas";
 
-const App = () => {
-  const [token, setToken] = useState(null);
-  const [usuario, setUsuario] = useState(null);
-  const [registro, setRegistro] = useState(false);
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("usuario");
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUsuario(JSON.parse(storedUser));
-    }
-  }, []);
-
-  const handleLogin = async (credentials) => {
-    try {
-      const response = await axios.post("https://personas.ctpoba.edu.ar/api/ingresar", credentials);
-      if (response.data.status === "success") {
-        setToken(response.data.token);
-        setUsuario(response.data.user);
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("usuario", JSON.stringify(response.data.user));
-      } else {
-        alert("Error en el inicio de sesión");
-      }
-    } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-      alert("Error al iniciar sesión");
-    }
+export default class App extends Component {
+  state = {
+    autenticado: false,
+    usuario: null,
+    token: null,
+    mostrandoLogin: true,  // Estado para manejar si se muestra el login o el registro
   };
 
-  const handleRegister = async (newUser) => {
-    try {
-      const response = await axios.post("https://personas.ctpoba.edu.ar/api/registrar", newUser);
-      if (response.data.status === "success") {
-        setRegistro(false); // Volver a la pantalla de login después del registro
-        alert("Registro exitoso, por favor inicie sesión");
-      } else {
-        alert("Error en el registro");
-      }
-    } catch (error) {
-      console.error("Error al registrar usuario:", error);
-      alert("Error al registrar usuario");
-    }
+  manejarLogin = (usuario, token) => {
+    this.setState({ autenticado: true, usuario, token });
   };
 
-  const handleLogout = () => {
-    setToken(null);
-    setUsuario(null);
-    localStorage.removeItem("token");
-    localStorage.removeItem("usuario");
+  cambiarFormulario = () => {
+    this.setState({ mostrandoLogin: !this.state.mostrandoLogin });
   };
 
-  if (!token) {
+  render() {
+    const { autenticado, mostrandoLogin } = this.state;
+
     return (
       <div>
-        {registro ? (
-          <Registro onRegister={handleRegister} onBack={() => setRegistro(false)} />
+        {!autenticado ? (
+          mostrandoLogin ? (
+            <>
+              <Login manejarLogin={this.manejarLogin} />
+              <p>No tienes cuenta? <span onClick={this.cambiarFormulario} style={{ color: 'blue', cursor: 'pointer' }}>Regístrate</span></p>
+            </>
+          ) : (
+            <>
+              <Registro manejarLogin={this.manejarLogin} />
+              <p>Ya tienes una cuenta? <span onClick={this.cambiarFormulario} style={{ color: 'blue', cursor: 'pointer' }}>Inicia sesión</span></p>
+            </>
+          )
         ) : (
-          <Login onLogin={handleLogin} onRegister={() => setRegistro(true)} />
+          <GestionPersonas token={this.state.token} />
         )}
       </div>
     );
   }
-
-  return (
-    <div>
-      <GestionPersonas token={token} onLogout={handleLogout} />
-    </div>
-  );
-};
-
-export default App;
+}
