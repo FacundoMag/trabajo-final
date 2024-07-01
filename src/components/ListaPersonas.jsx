@@ -1,12 +1,12 @@
 import React from "react";
 
-const ListaPersonas = ({ personas, cargarPersonas }) => {
+const ListaPersonas = ({ personas, cargarPersonas, seleccionarPersona }) => {
   return (
     <div>
       <h2>Listado de Personas</h2>
       <ul>
         {personas && personas.map(persona => (
-          <li key={persona.persona_id}>
+          <li key={persona.persona_id} onClick={() => seleccionarPersona(persona)}>
             <p>Nombre: {persona.nombres} {persona.apellidos}</p>
             <p>Documento: {persona.documento}</p>
             <p>Fecha de Nacimiento: {persona.fechaNac}</p>

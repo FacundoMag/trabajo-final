@@ -1,56 +1,80 @@
-import React, { Component } from "react";
+// src/App.jsx
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import GestionPersonas from "./components/GestionPersonas";
+import Login from "./components/Login";
 import Registro from "./components/Registro";
-import IniciarSesion from "./components/IniciarSesion";
-import ListaPersonas from "./components/ListaPersonas";
+import GestionPersonas from "./components/GestionPersonas";
 
-export default class App extends Component {
-  state = {
-    token: null,
-    user: null,
-    vista: "iniciarSesion",
-  };
+const App = () => {
+  const [token, setToken] = useState(null);
+  const [usuario, setUsuario] = useState(null);
+  const [registro, setRegistro] = useState(false);
 
-  // Función para manejar el inicio de sesión
-  handleLogin = (token, user) => {
-    this.setState({ token, user, vista: "gestionPersonas" });
-    // Guardar el token en localStorage para persistencia
-    localStorage.setItem('token', token);
-    // Configurar el token en Axios globalmente
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  };
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("usuario");
+    if (storedToken && storedUser) {
+      setToken(storedToken);
+      setUsuario(JSON.parse(storedUser));
+    }
+  }, []);
 
-  // Función para cambiar entre vista de inicio de sesión y registro
-  cambiarVista = () => {
-    const { vista } = this.state;
-    if (vista === "iniciarSesion") {
-      this.setState({ vista: "registro" });
-    } else {
-      this.setState({ vista: "iniciarSesion" });
+  const handleLogin = async (credentials) => {
+    try {
+      const response = await axios.post("https://personas.ctpoba.edu.ar/api/ingresar", credentials);
+      if (response.data.status === "success") {
+        setToken(response.data.token);
+        setUsuario(response.data.user);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("usuario", JSON.stringify(response.data.user));
+      } else {
+        alert("Error en el inicio de sesión");
+      }
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      alert("Error al iniciar sesión");
     }
   };
 
-  // Verificar el token al cargar la aplicación
-  componentDidMount() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.setState({ token, vista: "gestionPersonas" });
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  const handleRegister = async (newUser) => {
+    try {
+      const response = await axios.post("https://personas.ctpoba.edu.ar/api/registrar", newUser);
+      if (response.data.status === "success") {
+        setRegistro(false); // Volver a la pantalla de login después del registro
+        alert("Registro exitoso, por favor inicie sesión");
+      } else {
+        alert("Error en el registro");
+      }
+    } catch (error) {
+      console.error("Error al registrar usuario:", error);
+      alert("Error al registrar usuario");
     }
-  }
+  };
 
-  render() {
-    const { vista, token, user } = this.state;
+  const handleLogout = () => {
+    setToken(null);
+    setUsuario(null);
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
+  };
 
+  if (!token) {
     return (
       <div>
-        {vista === "iniciarSesion" && (
-          <IniciarSesion onLogin={this.handleLogin} cambiarVista={this.cambiarVista} />
+        {registro ? (
+          <Registro onRegister={handleRegister} onBack={() => setRegistro(false)} />
+        ) : (
+          <Login onLogin={handleLogin} onRegister={() => setRegistro(true)} />
         )}
-        {vista === "registro" && <Registro onRegister={this.cambiarVista} />}
-        {vista === "gestionPersonas" && <GestionPersonas token={token} user={user} />}
       </div>
     );
   }
-}
+
+  return (
+    <div>
+      <GestionPersonas token={token} onLogout={handleLogout} />
+    </div>
+  );
+};
+
+export default App;

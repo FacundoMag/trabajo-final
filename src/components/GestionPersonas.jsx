@@ -7,6 +7,7 @@ import EditarPersona from "./EditarPersona";
 export default class GestionPersonas extends Component {
   state = {
     personas: [],
+    personaSeleccionada: null,
     error: null
   };
 
@@ -23,7 +24,6 @@ export default class GestionPersonas extends Component {
       }
     })
       .then(response => {
-        console.log('Personas cargadas:', response.data);
         if (response.data.status === 'success') {
           this.setState({ personas: response.data.personas, error: null });
         } else {
@@ -31,22 +31,25 @@ export default class GestionPersonas extends Component {
         }
       })
       .catch(error => {
-        console.error('Error al cargar personas:', error);
         this.setState({ error: 'Error al cargar personas' });
       });
   };
 
+  seleccionarPersona = (persona) => {
+    this.setState({ personaSeleccionada: persona });
+  };
+
   render() {
-    const { personas, error } = this.state;
-    const { cambiarVista } = this.props;
+    const { personas, personaSeleccionada, error } = this.state;
+    const { cambiarVista, token } = this.props;
 
     return (
       <div>
         <h1>Gestión de Personas</h1>
         {error && <p>Error: {error}</p>}
-        <AgregarPersona cargarPersonas={this.cargarPersonas} token={this.props.token} />
-        <ListaPersonas personas={personas} cargarPersonas={this.cargarPersonas} />
-        <EditarPersona />
+        <AgregarPersona cargarPersonas={this.cargarPersonas} token={token} />
+        <ListaPersonas personas={personas} cargarPersonas={this.cargarPersonas} seleccionarPersona={this.seleccionarPersona} />
+        {personaSeleccionada && <EditarPersona persona={personaSeleccionada} token={token} cargarPersonas={this.cargarPersonas} />}
         <button onClick={cambiarVista}>Cerrar Sesión</button>
       </div>
     );
