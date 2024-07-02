@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import AgregarPersona from "./AgregarPersona";
-import './GestionarPersonas.css';
+import './GestionPersonas.css';
 
 export default class GestionPersonas extends Component {
   state = {
